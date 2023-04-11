@@ -79,7 +79,7 @@ pub fn search(
         info.nodes += 1;
         move_number += 1;
 
-        if (move_number == 1) {
+        if move_number == 1 {
             best_score = -search(
                 info,
                 -beta,
@@ -89,9 +89,9 @@ pub fn search(
                 ply + 1,
                 &mut old_pv,
             );
-            if (best_score > alpha) {
+            if best_score > alpha {
                 pv.store(mv, &old_pv);
-                if (best_score >= beta) {
+                if best_score >= beta {
                     return best_score;
                 }
                 alpha = best_score;
@@ -106,7 +106,7 @@ pub fn search(
                 ply + 1,
                 &mut old_pv,
             );
-            if (score > alpha && score < beta) {
+            if score > alpha && score < beta {
                 score = -search(
                     info,
                     -beta,
@@ -116,12 +116,12 @@ pub fn search(
                     ply + 1,
                     &mut old_pv,
                 );
-                if (score > alpha) {
+                if score > alpha {
                     alpha = score;
                     pv.store(mv, &old_pv);
                 }
-                if (score > best_score) {
-                    if (score >= beta) {
+                if score > best_score {
+                    if score >= beta {
                         return score;
                     }
                     best_score = score;
