@@ -7,6 +7,7 @@ pub const EG_PIECE_VALUES: [i32; 6] = [94, 281, 297, 512, 936, 0];
 pub const PHASE_VALUES: [i32; 6] = [0, 1, 1, 2, 4, 0];
 static PST: Lazy<PieceSquareTable> = Lazy::new(PieceSquareTable::new);
 
+#[must_use]
 pub fn eval(board: &Board) -> i16 {
     let mut mg = 0;
     let mut eg = 0;
@@ -18,8 +19,8 @@ pub fn eval(board: &Board) -> i16 {
         let sq = square as usize;
 
         game_phase += PHASE_VALUES[piece];
-        mg += PST.mg_table[color + piece * 2][sq];
-        eg += PST.eg_table[color + piece * 2][sq];
+        mg += PST.mg_pst[color + piece * 2][sq];
+        eg += PST.eg_pst[color + piece * 2][sq];
     }
 
     let mg_weight = game_phase.min(24);
