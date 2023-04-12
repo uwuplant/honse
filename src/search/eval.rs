@@ -7,17 +7,6 @@ pub const EG_PIECE_VALUES: [i16; 6] = [94, 281, 297, 512, 936, 0];
 pub const PHASE_VALUES: [i16; 6] = [0, 1, 1, 2, 4, 0];
 static PST: Lazy<PieceSquareTable> = Lazy::new(PieceSquareTable::new);
 
-fn piece_type(piece: Piece) -> usize {
-    match piece {
-        Piece::Pawn => 0,
-        Piece::Knight => 1,
-        Piece::Bishop => 2,
-        Piece::Rook => 3,
-        Piece::Queen => 4,
-        Piece::King => 5,
-    }
-}
-
 pub fn eval(board: &Board) -> i16 {
     let mut score = 0;
 
@@ -33,9 +22,7 @@ pub fn eval(board: &Board) -> i16 {
         game_phase += PHASE_VALUES[piece];
         mg += PST.mg_table[color + piece * 2][sq];
         eg += PST.eg_table[color + piece * 2][sq];
-        // println!("current_mg {} current_eg {}", mg, eg);
     }
-    // println!("pos {:#b} mg {} eg {}", board.occupied().0, mg, eg);
 
     let mg_weight = game_phase.min(24);
     let eg_weight = 24 - mg_weight;
