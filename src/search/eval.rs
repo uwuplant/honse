@@ -34,15 +34,20 @@ pub fn eval(board: &Board) -> i16 {
 
         match color {
             Color::White => {
+                println!("piece {} color {} sq {}", piece, color, square);
+                println!("mg {} eg {}", PST.mg_table[piece_type(piece)][sq], PST.eg_table[piece_type(piece)][sq]);
                 mg += PST.mg_table[piece_type(piece)][sq];
                 eg += PST.eg_table[piece_type(piece)][sq];
             }
             Color::Black => {
+                println!("piece {} color {} sq {}", piece, color, square);
+                println!("mg {} eg {}", PST.mg_table[piece_type(piece)][sq], PST.eg_table[piece_type(piece)][sq]);
                 mg -= PST.mg_table[piece_type(piece) + 6][sq];
                 eg -= PST.eg_table[piece_type(piece) + 6][sq];
             }
         }
     }
+    println!("pos {:#b} mg {} eg {}", board.occupied().0, mg, eg);
 
     let mg_weight = game_phase.min(24);
     let eg_weight = 24 - mg_weight;

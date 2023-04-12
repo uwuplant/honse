@@ -177,22 +177,13 @@ impl PieceSquareTable {
         };
 
             for piece in 0..6 {
-                for piece_color in (0..12).step_by(2) {
-                    for square in 0..64 {
-                        table.mg_table[piece_color][square] = MG_PIECE_VALUES[piece] + MG_PESTO_TABLE[piece][square ^ 56]; // white
-                        table.eg_table[piece_color][square] = EG_PIECE_VALUES[piece] + EG_PESTO_TABLE[piece][square ^ 56];
-                        table.mg_table[piece_color + 1][square] = MG_PIECE_VALUES[piece] + MG_PESTO_TABLE[piece][square]; // black
-                        table.eg_table[piece_color + 1][square] = EG_PIECE_VALUES[piece] + EG_PESTO_TABLE[piece][square];
-                    }
+                for square in 0..64 {
+                    table.mg_table[piece * 2][square] = MG_PIECE_VALUES[piece] + MG_PESTO_TABLE[piece][square]; // white
+                    table.eg_table[piece * 2][square] = EG_PIECE_VALUES[piece] + EG_PESTO_TABLE[piece][square];
+                    table.mg_table[piece * 2 + 1][square] = MG_PIECE_VALUES[piece] + MG_PESTO_TABLE[piece][square ^ 56]; // black
+                    table.eg_table[piece * 2 + 1][square] = EG_PIECE_VALUES[piece] + EG_PESTO_TABLE[piece][square ^ 56];
                 }
             }
-
-        table.mg_table.into_iter().for_each(|it| {
-            print!("{:#?}", it);
-        });
-        table.eg_table.into_iter().for_each(|it| {
-            print!("{:#?}", it);
-        });
         table
     }
 }
