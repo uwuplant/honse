@@ -1,1 +1,1 @@
-pub mod piece_square_table;
+pub mod psts;

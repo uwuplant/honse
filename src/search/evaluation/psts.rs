@@ -1,5 +1,4 @@
-use std::ops::{Index, Neg};
-use cozy_chess::{Color, Piece};
+use std::ops::{Neg};
 use super::super::eval::{*};
 
 #[rustfmt::skip]
