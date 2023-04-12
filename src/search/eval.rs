@@ -1,6 +1,6 @@
+use super::evaluation::psts::*;
 use cozy_chess::{Board, Color};
 use once_cell::sync::Lazy;
-use super::evaluation::psts::{*};
 
 pub const MG_PIECE_VALUES: [i32; 6] = [82, 337, 365, 477, 1025, 0];
 pub const EG_PIECE_VALUES: [i32; 6] = [94, 281, 297, 512, 936, 0];
@@ -8,10 +8,8 @@ pub const PHASE_VALUES: [i32; 6] = [0, 1, 1, 2, 4, 0];
 static PST: Lazy<PieceSquareTable> = Lazy::new(PieceSquareTable::new);
 
 pub fn eval(board: &Board) -> i16 {
-    let mut score: i32 = 0;
-
-    let mut mg: i32 = 0;
-    let mut eg: i32 = 0;
+    let mut mg = 0;
+    let mut eg = 0;
     let mut game_phase = 0;
 
     for square in board.occupied() {
@@ -27,7 +25,7 @@ pub fn eval(board: &Board) -> i16 {
     let mg_weight = game_phase.min(24);
     let eg_weight = 24 - mg_weight;
 
-    score += ((mg * mg_weight) + (eg * eg_weight)) / 24;
+    let score = ((mg * mg_weight) + (eg * eg_weight)) / 24;
 
     match board.side_to_move() {
         Color::White => score as i16,
@@ -46,7 +44,7 @@ mod test {
             "rnb1kbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
             false,
         )
-            .unwrap();
+        .unwrap();
 
         assert!(eval(&board) > 0)
     }
