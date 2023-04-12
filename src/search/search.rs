@@ -71,62 +71,37 @@ pub fn search(
 
     let mut best_score = -INFINITY;
     let moves: Vec<Move> = move_gen::all_moves(board);
-    let mut move_number = 0;
 
     for mv in moves {
         let mut new_board = board.clone();
         new_board.play_unchecked(mv);
         info.nodes += 1;
-        move_number += 1;
 
-        if move_number == 1 {
-            best_score = -search(
-                info,
-                -beta,
-                -alpha,
-                &new_board,
-                depth - 1,
-                ply + 1,
-                &mut old_pv,
-            );
-            if best_score > alpha {
-                pv.store(mv, &old_pv);
-                if best_score >= beta {
-                    return best_score;
-                }
-                alpha = best_score;
-            }
-        } else {
-            let mut score = -search(
-                info,
-                -alpha - 1,
-                -alpha,
-                &new_board,
-                depth - 1,
-                ply + 1,
-                &mut old_pv,
-            );
-            if score > alpha && score < beta {
-                score = -search(
-                    info,
-                    -beta,
-                    -alpha,
-                    &new_board,
-                    depth - 1,
-                    ply + 1,
-                    &mut old_pv,
-                );
-                if score > alpha {
-                    alpha = score;
-                    pv.store(mv, &old_pv);
-                }
-                if score > best_score {
-                    if score >= beta {
-                        return score;
-                    }
-                    best_score = score;
-                }
-            }
+        let score = -search(
+            info,
+            -beta,
+            -alpha,
+            &new_board,
+            depth - 1,
+            ply + 1,
+            &mut old_pv,
+        );
+
+        if score <= best_score {
+            continue;
+        }
+        best_score = score;
+
+        if score <= alpha {
+            continue;
+        }
+        // New best move
+        alpha = score;
+        pv.store(mv, &old_pv);
+
+        // Fail-high
+        if alpha >= beta {
+            break;
         }
     }
 

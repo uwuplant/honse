@@ -26,28 +26,16 @@ pub fn eval(board: &Board) -> i16 {
     let mut game_phase = 0;
 
     for square in board.occupied() {
-        let piece = board.piece_on(square).unwrap();
-        let color = board.color_on(square).unwrap();
+        let piece = board.piece_on(square).unwrap() as usize;
+        let color = board.color_on(square).unwrap() as usize;
         let sq = square as usize;
 
-        game_phase += PHASE_VALUES[piece_type(piece)];
-
-        match color {
-            Color::White => {
-                println!("piece {} color {} sq {}", piece, color, square);
-                println!("mg {} eg {}", PST.mg_table[piece_type(piece)][sq], PST.eg_table[piece_type(piece)][sq]);
-                mg += PST.mg_table[piece_type(piece)][sq];
-                eg += PST.eg_table[piece_type(piece)][sq];
-            }
-            Color::Black => {
-                println!("piece {} color {} sq {}", piece, color, square);
-                println!("mg {} eg {}", PST.mg_table[piece_type(piece)][sq], PST.eg_table[piece_type(piece)][sq]);
-                mg -= PST.mg_table[piece_type(piece) + 6][sq];
-                eg -= PST.eg_table[piece_type(piece) + 6][sq];
-            }
-        }
+        game_phase += PHASE_VALUES[piece];
+        mg += PST.mg_table[color + piece * 2][sq];
+        eg += PST.eg_table[color + piece * 2][sq];
+        // println!("current_mg {} current_eg {}", mg, eg);
     }
-    println!("pos {:#b} mg {} eg {}", board.occupied().0, mg, eg);
+    // println!("pos {:#b} mg {} eg {}", board.occupied().0, mg, eg);
 
     let mg_weight = game_phase.min(24);
     let eg_weight = 24 - mg_weight;
